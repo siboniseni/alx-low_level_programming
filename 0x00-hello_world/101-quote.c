@@ -1,6 +1,6 @@
 #include <stdio.h>
 /**
-* main -Entry
+* main - A program that prints a line to the standard error
 * Return: 1
 */
 int main(void)
