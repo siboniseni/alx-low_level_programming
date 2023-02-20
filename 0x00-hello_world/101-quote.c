@@ -1,11 +1,17 @@
-#include <stdio.h>
+#include <unistd.h>
+
 /**
-* main - A program that prints a line to the standard error
-* Return: 1
-*/
+ * main - Entry point of the program
+ *
+ * Return: Always 1 (Error status)
+ */
 int main(void)
 {
-	write(1, "and that piece of art is useful\" - Dora Korpa, 2015-10-19\n"
-, 59);
+	char *msg = "and that piece of art is useful\" - Dora Korpar, 2015-10-19\n";
+	int len = 59; /* Length of the message excluding null terminator */
+
+	if (write(STDERR_FILENO, msg, len) != len)
+		return (1);
+
 	return (1);
 }
