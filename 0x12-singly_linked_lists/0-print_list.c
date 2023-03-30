@@ -1,14 +1,11 @@
 #include <stdio.h>
 #include "lists.h"
 
-
-typedef struct list_s
+size_t print_list(const list_t *h)
 {
-    char *str;
-    unsigned int len;
-    struct list_s *next;
+	size_t node_num = 0;
 
-    	int *head = &list_s;
+	const list_t *head = h;
 
 	if (head == NULL)
 	{
@@ -17,6 +14,9 @@ typedef struct list_s
 	else
 	{
 		printf("[%u] %s\n", head->len, head->str);
+		
+		head = head->next;
+		node_num++;
 	}
-
-} list_t;
+	return (node_num);
+} 
