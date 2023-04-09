@@ -15,7 +15,7 @@ int clear_bit(unsigned long int *n, unsigned int index)
 
 	if (max == 0x00)
 		return (-1);
-	
+
 	*n &= max;
 		return (1);
 }
