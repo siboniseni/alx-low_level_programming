@@ -1,2 +1,1 @@
-C proramming language
-C is fun
+0x12. C is fun
