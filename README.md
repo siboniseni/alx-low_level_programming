@@ -1,1 +1,1 @@
-0x12. C is fun
+C is fun
