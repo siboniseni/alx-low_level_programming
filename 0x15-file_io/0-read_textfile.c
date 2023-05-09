@@ -1,38 +1,42 @@
 #include "main.h"
+/**
+* read_textfile - check the code for Holberton School students.
+* @filename: file to read and write
+* @letters: number of letters to read and write.
+* Return: letters printed
+*/
+ssize_t read_textfile(const char *filename, size_t letters)
+{
+	ssize_t nletters;
+	int file;
+	char *text;
 
-ssize_t read_textfile(const char *filename, size_t letters) {
-    if (filename == NULL) {
-        return 0;
-    }
-
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        return 0;
-    }
-
-    char *buffer = (char *) malloc(letters + 1);
-    if (buffer == NULL) {
-        fclose(file);
-        return 0;
-    }
-
-    ssize_t bytes_read = fread(buffer, sizeof(char), letters, file);
-    if (bytes_read == -1) {
-        fclose(file);
-        free(buffer);
-        return 0;
-    }
-
-    buffer[bytes_read] = '\0';
-    ssize_t bytes_written = fwrite(buffer, sizeof(char), bytes_read, stdout);
-    if (bytes_written != bytes_read) {
-        fclose(file);
-        free(buffer);
-        return 0;
-    }
-
-    fclose(file);
-    free(buffer);
-    return bytes_read;
+	if (!filename)
+		return (0);
+	text = malloc(sizeof(char) * letters + 1);
+	if (text == NULL)
+		return (0);
+	file = open(filename, O_RDONLY);
+	if (file == -1)
+	{
+		free(text);
+		return (0);
+	}
+	nletters = read(file, text, sizeof(char) * letters);
+	if (nletters == -1)
+	{
+		free(text);
+		close(file);
+		return (0);
+	}
+	nletters = write(STDOUT_FILENO, text, nletters);
+	if (nletters == -1)
+	{
+		free(text);
+		close(file);
+		return (0);
+	}
+	free(text);
+	close(file);
+	return (nletters);
 }
-
