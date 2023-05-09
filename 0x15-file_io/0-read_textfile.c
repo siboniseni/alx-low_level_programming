@@ -1,30 +1,38 @@
 #include "main.h"
 
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-
-int create_file(const char *filename, char *text_content) {
+ssize_t read_textfile(const char *filename, size_t letters) {
     if (filename == NULL) {
-        return -1;
+        return 0;
     }
 
-    int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    if (fd == -1) {
-        return -1;
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        return 0;
     }
 
-    if (text_content != NULL) {
-        ssize_t len = strlen(text_content);
-        ssize_t bytes_written = write(fd, text_content, len);
-        if (bytes_written != len) {
-            close(fd);
-            return -1;
-        }
+    char *buffer = (char *) malloc(letters + 1);
+    if (buffer == NULL) {
+        fclose(file);
+        return 0;
     }
 
-    close(fd);
-    return 1;
+    ssize_t bytes_read = fread(buffer, sizeof(char), letters, file);
+    if (bytes_read == -1) {
+        fclose(file);
+        free(buffer);
+        return 0;
+    }
+
+    buffer[bytes_read] = '\0';
+    ssize_t bytes_written = fwrite(buffer, sizeof(char), bytes_read, stdout);
+    if (bytes_written != bytes_read) {
+        fclose(file);
+        free(buffer);
+        return 0;
+    }
+
+    fclose(file);
+    free(buffer);
+    return bytes_read;
 }
+
