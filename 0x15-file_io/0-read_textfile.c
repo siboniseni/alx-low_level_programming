@@ -1,26 +1,40 @@
 #include "main.h"
+#include <stdio.h>
 
-ssize_t read_textfile(const char *filename, size_t letters) {
+/**
+ * read_textfile - Reads a text file and prints it to POSIX stdout.
+ * @filename: A pointer to the name of the file.
+ * @letters: The number of letters the function should read and print.
+ *
+ * Return: If the function fails or filename is NULL - 0.
+ *         O/w - the actual number of bytes the function can read and print.
+ */
+ssize_t read_textfile(const char *filename, size_t letters)
+{
+    int fd;
+    char *buffer;
+    ssize_t bytes_read, bytes_written;
+
     // Check if filename is NULL
     if (filename == NULL) {
         return 0;
     }
 
     // Open the file for reading
-    int fd = open(filename, O_RDONLY);
+    fd = open(filename, O_RDONLY);
     if (fd == -1) {
         return 0;
     }
 
     // Allocate a buffer to store the file contents
-    char *buffer = malloc(sizeof(char) * letters);
+    buffer = malloc(sizeof(char) * letters);
     if (buffer == NULL) {
         close(fd);
         return 0;
     }
 
     // Read up to letters bytes from the file
-    ssize_t bytes_read = read(fd, buffer, letters);
+    bytes_read = read(fd, buffer, letters);
     if (bytes_read == -1) {
         close(fd);
         free(buffer);
@@ -28,7 +42,7 @@ ssize_t read_textfile(const char *filename, size_t letters) {
     }
 
     // Write the file contents to stdout
-    ssize_t bytes_written = write(STDOUT_FILENO, buffer, bytes_read);
+    bytes_written = write(STDOUT_FILENO, buffer, bytes_read);
     if (bytes_written == -1 || bytes_written != bytes_read) {
         close(fd);
         free(buffer);
@@ -39,15 +53,5 @@ ssize_t read_textfile(const char *filename, size_t letters) {
     close(fd);
     free(buffer);
     return bytes_written;
-}
-
-int main() {
-    // Read and print the contents of "example.txt"
-    ssize_t bytes_read = read_textfile("example.txt", 1024);
-    if (bytes_read == 0) {
-        fprintf(stderr, "Error reading file.\n");
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
 }
 
